@@ -1,57 +1,69 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import { Card, Grid, Typography } from "@mui/material";
+import { Container } from "@mui/system";
+import { Header } from "./Components/Header";
+import { Search } from "./Components/Search";
+import { SelectComponent } from "./Components/Select";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
+    <Container maxWidth='xl'>
+      <Grid container 
+            direction='column'
+      >
+        <Grid item 
+              container
+              direction='column'
+              alignItems='center'
+        >
+          <Grid item>
+            <Header/>
+          </Grid>
+
+          <Grid item>
+            <Search/>
+          </Grid>
+
+          <Grid item 
+                container
+                justifyContent='center'
+                spacing={1}
+                mt={2} 
           >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+            <Grid item 
+                  width={100}
+            >
+              <SelectComponent/>
+            </Grid>
+            <Grid item 
+                  width={100}
+            >
+              <SelectComponent/>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item 
+              container
+              direction='column'
+              alignItems='center'
+              mt={4}
+        >
+          <Grid item>
+            <Typography>Found ??? result</Typography> 
+          </Grid>
+        </Grid>
+
+        <Grid item 
+              container
+        >
+          <Grid item>
+            <Card>
+
+            </Card>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 
