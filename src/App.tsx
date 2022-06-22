@@ -1,10 +1,22 @@
 import { Card, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { fetchBooks } from "./app/redicers/ActionCreators";
 import { Header } from "./Components/Header";
 import { Search } from "./Components/Search";
 import { SelectComponent } from "./Components/Select";
 
 function App() {
+  const dispatch = useAppDispatch()
+  const {books, isLoading, error} = useAppSelector(state => state.bookReducer)
+
+  useEffect(() => {
+    dispatch(fetchBooks())
+  }, [])
+
+  console.log(books);
+
   return (
     <Container maxWidth='xl'>
       <Grid container 
