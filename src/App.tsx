@@ -1,21 +1,22 @@
-import { Card, Grid, Typography } from "@mui/material";
+import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { fetchBooks } from "./app/redicers/ActionCreators";
+import {  useState } from "react";
+import { useFetchAllBooksQuery } from "./app/services/BookService";
+import { CardComponent } from "./Components/Card";
 import { Header } from "./Components/Header";
 import { Search } from "./Components/Search";
-import { SelectComponent } from "./Components/Select";
+import { SelectType } from "./Components/SelectType";
+import { SelectSort } from "./Components/SelectSort";
+import SearchIcon from '@mui/icons-material/Search';
 
 function App() {
-  const dispatch = useAppDispatch()
-  const {books, isLoading, error} = useAppSelector(state => state.bookReducer)
+  const [search, setSearch] = useState('JavaScript')
+  const [type, setType] = useState('all')
+  const [sort, setSort] = useState('relevance')
+  const [maxResults, setMaxResults] = useState(11)
+  const [request, setRequest] = useState({search, type, sort, maxResults})
 
-  useEffect(() => {
-    dispatch(fetchBooks())
-  }, [])
-
-  console.log(books);
+  const {data: books, isLoading, error} = useFetchAllBooksQuery(request)
 
   return (
     <Container maxWidth='xl'>
@@ -31,8 +32,22 @@ function App() {
             <Header/>
           </Grid>
 
-          <Grid item>
-            <Search/>
+          <Grid item 
+                container
+                justifyContent='center'
+                alignItems='center'
+          >
+            <Grid item >
+              <Search setSearch={setSearch}/>
+            </Grid>
+            <Grid item>
+              <Button variant='contained'
+                      onClick={() => setRequest({search, type, sort, maxResults})}
+                      endIcon={<SearchIcon/>}
+              >
+                Search
+              </Button>
+            </Grid>
           </Grid>
 
           <Grid item 
@@ -44,12 +59,12 @@ function App() {
             <Grid item 
                   width={100}
             >
-              <SelectComponent/>
+              <SelectType type={type} setType={setType}/>
             </Grid>
             <Grid item 
                   width={100}
             >
-              <SelectComponent/>
+              <SelectSort sort={sort} setSort={setSort}/>
             </Grid>
           </Grid>
         </Grid>
@@ -61,18 +76,27 @@ function App() {
               mt={4}
         >
           <Grid item>
-            <Typography>Found ??? result</Typography> 
+            <Typography>Found {books?.totalItems} result</Typography> 
           </Grid>
         </Grid>
 
         <Grid item 
               container
+              spacing={1}
         >
-          <Grid item>
-            <Card>
-
-            </Card>
-          </Grid>
+            {isLoading ? <CircularProgress /> : null}
+            {books && books.items.map((book) => (
+              <Grid item 
+                    key={book.id}
+              >
+                  <CardComponent imageLinks={book.volumeInfo.imageLinks}
+                                 categories={book.volumeInfo.categories}
+                                 title={book.volumeInfo.title}
+                                 authors={book.volumeInfo.authors}
+                  />
+              </Grid>
+            ))}
+            {error ? "Ошибка!" : null}
         </Grid>
       </Grid>
     </Container>
